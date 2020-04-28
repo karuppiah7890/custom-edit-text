@@ -246,3 +246,25 @@ index `0`.
 
 So, this fixed one bug! :)
 
+---
+
+For future reference : 
+
+https://developer.android.com/reference/kotlin/androidx/appcompat/widget/AppCompatMultiAutoCompleteTextView
+
+---
+
+Continuing Third attempt
+
+Need to fix the weird character issue. This is because I'm trying
+to use this ASCII character - "US", which is short for Unit Separator",
+and it's integer code is `31`, and I'm trying to use this character
+as the token end, because I didn't want it to be a space - as
+the token itself can contain spaces. And this character - I chose
+by checking https://github.com/hootsuite/nachos library, somewhere
+in it's code. Apparently this character cannot be printed. Funnily,
+in our case, it's trying to get printed and then shows some weird
+symbol as it's a non-printable character and hence I think this
+behavior. I need to see how to fix this! :)
+
+
