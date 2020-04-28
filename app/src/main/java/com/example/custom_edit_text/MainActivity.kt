@@ -35,10 +35,16 @@ class MentionTokenizer : Tokenizer {
 
     override fun findTokenStart(text: CharSequence, cursor: Int): Int {
         var i = cursor
-        while (i > 0 && text[i - 1] != '@') {
+        while (i > 0) {
+            if (text[i - 1] == '@') {
+                return i
+            }
             i--
         }
-        return i
+        if (i == 0 && text.isNotEmpty() && text[0] == '@') {
+            return 0
+        }
+        return cursor
     }
 
     override fun findTokenEnd(text: CharSequence, cursor: Int): Int {

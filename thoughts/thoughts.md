@@ -12,7 +12,8 @@ from a list of suggestions to put that content
 into the box.
 3. The items are normal strings. They can contain
 spaces though. Later, the items will be complex -
-with string, image. So, it should be customizable
+with string, image. So, the view of the list and
+the list items should be customizable
 4. And when the item is selected - only then it is
 put in the box. Otherwise not. 
 5. When the item is put in the box, it should be
@@ -215,4 +216,33 @@ Gonna first copy the comma tokenizer! ;)
 
 Okay, I copied and made some changes. It looks weird now
 actually. Lol :P
+
+Demo
+https://youtu.be/KA8S2orq8NQ
+
+So, that was the second attempt
+---
+
+Clearly, we can see some weird character at the end of
+the token when choosing from the list. Also, we can
+see suggestions at the start with no @. I think I know
+the reason for both. Need to see how to fix it though
+
+---
+
+Third attempt
+
+Let's try to fix the issues that we just noticed.
+
+So, the first issue was - seeing suggestions while
+starting to type, even when no `@` was given.
+I "think" this was because of the fact that the
+`findTokenStart` returned `0` even when there
+was no `@` at the start and it started giving
+suggestions. So, I made sure I returned the
+`cursor` value as is, if no `@` was found
+anywhere, till the start, including the
+index `0`.
+
+So, this fixed one bug! :)
 
