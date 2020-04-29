@@ -17,7 +17,7 @@ the list items should be customizable
 4. And when the item is selected - only then it is
 put in the box. Otherwise not. 
 5. When the item is put in the box, it should be
-highlighted in some color
+highlighted in some color (text color, not background)
 
 ---
 First Attempt:
@@ -285,4 +285,116 @@ to support names or strings with spaces, for the future.
 
 Demo video:
 https://youtu.be/21whJXzKRlI
+
+---
+Fourth attempt
+
+Now, in the next attempt, I want to highlight the string with some
+color when it's chosen from the suggestions. Or else not highlight!
+Actually, highlight means background usually, here I mean, highlight
+with text color. Or may be both - text color and background color.
+If that's possible :) I think it might be ;)
+
+Okay, so this is what I found out -
+
+https://stackoverflow.com/questions/10242274/assigning-text-color-to-text-in-edittext
+
+Looks like I really need to read about this `SpannableString` 😅
+Gotta get down to work to consume and read some content about it!
+
+I just tried the example code in the stackoverflow code. First it
+felt like it didn't work, only to realize I couldn't see the blue
+colored text properly 🤣 and only two characters were colored.
+So, the first thing I did was change the color to red and colored
+some more characters. This is how it looked then
+
+![partial-colored-text-demo](./images/demo-4/partial-colored-text-demo.png "partial-colored-text-demo")
+
+For highlighting, I was actually thinking of using the fact that
+all the mentions start with @ and end with ETX character. The only
+problem is that - someone could type @ and not choose from the list,
+so, no ETX character will be put. But that's okay, we can still find
+chunks of text between @ and ETXs, and leave out lonely @. But the
+problem arises when there can be lonely ETXs too! Now there's a
+match between the lonely @ where user didn't choose from list
+and lonely ETXs too. Does this affect us? Lonely @ and ETXs?
+Gotta check. Also, how does lonely ETX come you ask? Like this -
+what happens when user goes in between a selected item, a
+mention and types in it. Suggestions are again shown and if you
+choose it, it's replaced and the existing text on the right
+of the mention goes farther away to the right and the current
+mention is auto completed. More like
+
+"@Karuppiah <cursor>Natarajan"
+
+And then auto suggestions show up and choosing "Karuppiah Natarajan" will lead to
+
+"@Karuppiah Natarajan <cursor>Natarajan"
+
+Let's just try to highlight the characters first. Let's see how to solve that problem later
+I guess?
+
+Okay, for the past hour or so I have been trying to read about spans and how to properly use
+them and all and thinking about all the possible problems - basically me trying to get
+it right the first time - which is gonna take a lot of time - and may not work too. So I
+think I should really dive in and stop thinking so much! 🙈
+
+So, my idea is to implement a CustomMultiAutoCompleteTextView which will watch for
+text changes and then highlight the text! :)
+
+and the plan was to set markup so that I can just color the text for the mentions
+and if something changes - just remove the markup. for removing markup I was checking
+how to do it with removeSpan - there was some method called getSpans and I wasn't sure
+if I'll be able to make it work - like I needed a spannable string and it's not me
+who sets the textview text, and I wasn't sure how that's gonna workout and all. I guess
+I just gotta do it and dig in and see how it all goes
+
+https://stackoverflow.com/questions/18009552/how-to-use-removespan-on-android-textview
+
+also, I just noticed that there's a clearSpans method ;) may be I don't need to getSpans to
+remove it, instead just use clearSpans. Let's see
+
+The current idea is to first find out where all spans need to be put - and then
+clear and put the spans immediately! :) The only worry is - will there be any glitches
+of sorts is the question. Especially because people could be typing while I'm doing all
+this processing. I don't know how that's gonna work. Hmm. This feels like a lot of processing,
+yeah
+
+Cool. So the idea that I had - nothing worked 🙈 Damn.
+
+Okay wait!!!!! WOW! So what I tried, finally worked!!!!! :D :D :D I mean, I saw this code
+that my friend shared. There also something similar was being done - changing text span
+onTextChanged using a watcher. I was wondering why it didn't work for me - I removed
+my clearSpans method call and it worked. Lol 🙈 😂 Should have just used removeSpan
+one by one after getting all spans using getSpans ! That's what I finally did. Still
+some bugs around. Gotta fix them up! :D
+
+Currently, I can see highlight for the words, yes! :) That's a good start! And I see
+highlights only for selected text. There's still one or two bugs around that. Need
+to write tests for it I think!
+
+Okay, so I fixed the bug by reading through code and some experimentation 🙈 😅
+Seriously need to write the tests. Hmm. Need to learn how to write tests in Java / Kotlin.
+I mean, the directory structure and all. May be intellij can help with that, with the
+toggle to test file feature. Hmm. I could put a test for the functionality that gets
+the indices of the start and end of all the mentions! :)
+
+Now the only thing left out is - don't allow user to mess up with the mention input, just
+allow user to delete the mention
+
+Btw, I struggled a lot for this implementation - I mean, I think simplicity is key and I tried
+really hard to keep the code very small and write very less code and only code that I understand to
+some extent and some simple implementation
+
+I think there could be a better way too. More optimized and what not. But this is a good start! :D
+
+Demo:
+https://youtu.be/Po7ezE0Itag
+
+---
+Fifth attempt
+
+Don't allow user to modify (delete partially, adding characters) mention text alone,
+but allow user to delete mention text completely - and not partially like mentioned before.
+
 
