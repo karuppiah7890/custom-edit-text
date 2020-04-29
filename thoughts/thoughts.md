@@ -262,9 +262,27 @@ and it's integer code is `31`, and I'm trying to use this character
 as the token end, because I didn't want it to be a space - as
 the token itself can contain spaces. And this character - I chose
 by checking https://github.com/hootsuite/nachos library, somewhere
-in it's code. Apparently this character cannot be printed. Funnily,
+in it's code we saw it. Apparently this character cannot be printed. Funnily,
 in our case, it's trying to get printed and then shows some weird
 symbol as it's a non-printable character and hence I think this
 behavior. I need to see how to fix this! :)
 
+First I was guessing if the `SpannableString` and stuff is the issue,
+because I do remember seeing some crashes when I messed up the tokenizer
+code at times 🙈 I really need to write some tests and stop doing manual
+testing! Probably use some automation tool!
+
+Anyways, I tried adding whatever the `SpannableString` code was and it
+still didn't work. Later, I got rid of it.
+
+What actually worked was this - this time I used the ASCII character
+code 3 - which corresponds to the character called `ETX` or `End of Text`
+and it is also a non-printable character. I used it and it worked!!! :D
+
+I also added some strings which are substrings of other strings in my
+list. More like, `Karuppiah Natarajan` along with `Karuppiah`. I wanted
+to support names or strings with spaces, for the future.
+
+Demo video:
+https://youtu.be/21whJXzKRlI
 

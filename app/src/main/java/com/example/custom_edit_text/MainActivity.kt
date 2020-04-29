@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val entities = arrayOf(
-        "Karuppiah Natarajan", "Karthik", "Dharamadurai", "Alex", "Bharath"
+        "Karuppiah Natarajan", "Karthik", "Dharamadurai", "Alex", "Bharath", "Karuppiah", "Bharath Nepolean"
     )
 
 }
@@ -31,7 +31,10 @@ class MainActivity : AppCompatActivity() {
 // where the list contains entities that can be mentioned
 // using @ symbol in a text box
 class MentionTokenizer : Tokenizer {
-    private val unitSeparator = 31
+    // ASCII code representing ETX - End of Text
+    // http://www.asciitable.com/
+    private val unitSeparatorCode = 3
+    private val unitSeparatorChar = unitSeparatorCode.toChar()
 
     override fun findTokenStart(text: CharSequence, cursor: Int): Int {
         var i = cursor
@@ -51,7 +54,7 @@ class MentionTokenizer : Tokenizer {
         var i = cursor
         val len = text.length
         while (i < len) {
-            if (text[i].toInt() == 31) {
+            if (text[i] == unitSeparatorChar) {
                 return i
             } else {
                 i++
@@ -62,10 +65,10 @@ class MentionTokenizer : Tokenizer {
 
     override fun terminateToken(text: CharSequence): CharSequence {
         val i = text.length
-        return if (i > 0 && text[i - 1].toInt() == unitSeparator) {
+        return if (i > 0 && text[i - 1] == unitSeparatorChar) {
             text
         } else {
-            "$text${unitSeparator.toChar()}"
+            "$text$unitSeparatorChar"
         }
     }
 }
